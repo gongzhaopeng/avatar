@@ -19,7 +19,7 @@ export default function Task(
                 />
                 <span className="checkbox-custom" onClick={() => onArchiveTask(id)}/>
             </label>
-            <div className="title">
+            <div className="title" style={{background: "red"}}>
                 <input type="text" value={title} readOnly={true} placeholder="Input title"/>
             </div>
 
