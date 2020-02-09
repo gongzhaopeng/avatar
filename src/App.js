@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
 
+import Button from '@material-ui/core/Button';
+
 class App extends Component {
     render() {
-        return <h1 color="red">PLACEHOLDER</h1>;
+        return (
+            <Button variant="contained" color="primary">
+                LAUNCHING
+            </Button>
+        );
     }
 }
 
