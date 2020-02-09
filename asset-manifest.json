@@ -1,22 +1,29 @@
 {
   "files": {
-    "main.css": "/avatar/static/css/main.76e3c941.chunk.css",
-    "main.js": "/avatar/static/js/main.e62e5e9f.chunk.js",
-    "main.js.map": "/avatar/static/js/main.e62e5e9f.chunk.js.map",
+    "main.css": "/avatar/static/css/main.d498bfb3.chunk.css",
+    "main.js": "/avatar/static/js/main.051ea9b8.chunk.js",
+    "main.js.map": "/avatar/static/js/main.051ea9b8.chunk.js.map",
     "runtime-main.js": "/avatar/static/js/runtime-main.5f91fb84.js",
     "runtime-main.js.map": "/avatar/static/js/runtime-main.5f91fb84.js.map",
-    "static/js/2.b467a0e8.chunk.js": "/avatar/static/js/2.b467a0e8.chunk.js",
-    "static/js/2.b467a0e8.chunk.js.map": "/avatar/static/js/2.b467a0e8.chunk.js.map",
+    "static/css/2.3577d023.chunk.css": "/avatar/static/css/2.3577d023.chunk.css",
+    "static/js/2.ccc7505b.chunk.js": "/avatar/static/js/2.ccc7505b.chunk.js",
+    "static/js/2.ccc7505b.chunk.js.map": "/avatar/static/js/2.ccc7505b.chunk.js.map",
     "index.html": "/avatar/index.html",
-    "precache-manifest.59837e3c352317904772566cda3b688f.js": "/avatar/precache-manifest.59837e3c352317904772566cda3b688f.js",
+    "precache-manifest.c79a51aa5d5ed771f345314e99c7bf9c.js": "/avatar/precache-manifest.c79a51aa5d5ed771f345314e99c7bf9c.js",
     "service-worker.js": "/avatar/service-worker.js",
-    "static/css/main.76e3c941.chunk.css.map": "/avatar/static/css/main.76e3c941.chunk.css.map",
-    "static/js/2.b467a0e8.chunk.js.LICENSE.txt": "/avatar/static/js/2.b467a0e8.chunk.js.LICENSE.txt"
+    "static/css/2.3577d023.chunk.css.map": "/avatar/static/css/2.3577d023.chunk.css.map",
+    "static/css/main.d498bfb3.chunk.css.map": "/avatar/static/css/main.d498bfb3.chunk.css.map",
+    "static/js/2.ccc7505b.chunk.js.LICENSE.txt": "/avatar/static/js/2.ccc7505b.chunk.js.LICENSE.txt",
+    "static/media/blog-post.1.md": "/avatar/static/media/blog-post.1.f3a53693.md",
+    "static/media/blog-post.2.md": "/avatar/static/media/blog-post.2.99cbba3b.md",
+    "static/media/blog-post.3.md": "/avatar/static/media/blog-post.3.8d6e276b.md",
+    "static/media/index.css": "/avatar/static/media/roboto-latin-900italic.ebf6d164.woff2"
   },
   "entrypoints": [
     "static/js/runtime-main.5f91fb84.js",
-    "static/js/2.b467a0e8.chunk.js",
-    "static/css/main.76e3c941.chunk.css",
-    "static/js/main.e62e5e9f.chunk.js"
+    "static/css/2.3577d023.chunk.css",
+    "static/js/2.ccc7505b.chunk.js",
+    "static/css/main.d498bfb3.chunk.css",
+    "static/js/main.051ea9b8.chunk.js"
   ]
 }
