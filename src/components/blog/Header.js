@@ -31,8 +31,8 @@ function githubAuthUrl() {
     const searchParams = url.searchParams;
     searchParams.append('client_id', process.env.REACT_APP_GITHUB_AUTH_CLIENT_ID);
     searchParams.append('redirect_uri', process.env.REACT_APP_GITHUB_AUTH_REDIRECT_URI);
-    searchParams.append('login', 'gongzhaopeng');
-    searchParams.append('scope', 'user repo');
+    searchParams.append('login', process.env.REACT_APP_GITHUB_OWNER_EMAIL);
+    searchParams.append('scope', 'user:email repo');
     searchParams.append('allow_signup', 'false');
 
     return url;
