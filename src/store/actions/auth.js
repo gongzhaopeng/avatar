@@ -14,8 +14,10 @@ export function ownerVerified(accessToken) {
 export function codeReceived(code) {
     return dispatch =>
         acquireAccessToken(code).then(async accessToken => {
-            const ownerVerified = await verifyOwner(accessToken);
-            if (ownerVerified === true) {
+            if (!accessToken) return;
+
+            const verified = await verifyOwner(accessToken);
+            if (verified === true) {
                 dispatch(ownerVerified(accessToken));
                 history.push('/');
             }
@@ -23,30 +25,28 @@ export function codeReceived(code) {
 }
 
 function acquireAccessToken(code) {
-    const accessTokenReq = new FormData();
-    accessTokenReq.append('client_id',
-        process.env.REACT_APP_GITHUB_AUTH_CLIENT_ID);
-    accessTokenReq.append('client_secret',
-        process.env.REACT_APP_GITHUB_AUTH_CLIENT_SECRET);
-    accessTokenReq.append('code', code);
-    accessTokenReq.append('redirect_uri',
-        process.env.REACT_APP_GITHUB_AUTH_REDIRECT_URI);
+    const accessTokenReq = {
+        'client_id': process.env.REACT_APP_GITHUB_AUTH_CLIENT_ID,
+        'client_secret': process.env.REACT_APP_GITHUB_AUTH_CLIENT_SECRET,
+        'code': code,
+        'redirect_uri': process.env.REACT_APP_GITHUB_AUTH_REDIRECT_URI
+    }
 
-    return fetch('https://github.com/login/oauth/access_token', {
+    return fetch('/login/oauth/access_token', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: accessTokenReq
+        body: JSON.stringify(accessTokenReq)
     }).then(resp => resp.json()).then(res => {
         const {access_token} = res;
         return access_token;
-    });
+    }).catch(reason => console.log(reason));
 }
 
 function verifyOwner(accessToken) {
-    return fetch('https://api.github.com/user/emails', {
+    return fetch('/user/emails', {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -55,5 +55,5 @@ function verifyOwner(accessToken) {
     }).then(resp => resp.json()).then(res => {
         return res.some(({email}) =>
             email === process.env.REACT_APP_GITHUB_OWNER_EMAIL);
-    });
+    }).catch(reason => console.log(reason));
 }
