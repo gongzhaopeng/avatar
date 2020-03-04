@@ -11,6 +11,12 @@ export function ownerVerified(accessToken) {
     };
 }
 
+export function ownerLogout() {
+    return {
+        type: types.auth.OWNER_LOGOUT
+    }
+}
+
 export function codeReceived(code) {
     return dispatch =>
         acquireAccessToken(code).then(async accessToken => {

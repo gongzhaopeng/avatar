@@ -8,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import {connect} from "react-redux";
+import {ownerLogout} from "../../store/actions/auth";
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -41,7 +42,7 @@ function githubAuthUrl() {
 
 export function PureHeader(props) {
     const classes = useStyles();
-    const {sections, title, owner} = props;
+    const {sections, title, owner, onOwnerLogout} = props;
 
     return (
         <React.Fragment>
@@ -61,7 +62,8 @@ export function PureHeader(props) {
                 </IconButton>
                 {
                     owner.authenticated ?
-                        <Button variant="contained" size="large" color="primary">
+                        <Button variant="contained" size="large"
+                                color="secondary" onClick={onOwnerLogout}>
                             OWNER VERIFIED
                         </Button> :
                         <Button variant="outlined" size="small"
@@ -94,5 +96,8 @@ PureHeader.propTypes = {
 };
 
 export default connect(
-    ({owner}) => ({owner})
+    ({owner}) => ({owner}),
+    dispatch => ({
+        onOwnerLogout: () => dispatch(ownerLogout())
+    })
 )(PureHeader);
