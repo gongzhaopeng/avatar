@@ -13,7 +13,7 @@ export default initialState => {
         initialState,
         compose(
             applyMiddleware(thunk),
-            window.devToolsExtension()
+            window.__REDUX_DEVTOOLS_EXTENSION__()
         )
     );
     return store;

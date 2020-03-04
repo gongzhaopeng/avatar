@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import {connect} from "react-redux";
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -38,9 +39,9 @@ function githubAuthUrl() {
     return url;
 }
 
-export default function Header(props) {
+export function PureHeader(props) {
     const classes = useStyles();
-    const {sections, title} = props;
+    const {sections, title, owner} = props;
 
     return (
         <React.Fragment>
@@ -58,10 +59,16 @@ export default function Header(props) {
                 <IconButton>
                     <SearchIcon/>
                 </IconButton>
-                <Button variant="outlined" size="small"
-                        onClick={() => window.location.href = githubAuthUrl().href}>
-                    TO BE OWNER
-                </Button>
+                {
+                    owner.authenticated ?
+                        <Button variant="contained" size="large" color="primary">
+                            OWNER VERIFIED
+                        </Button> :
+                        <Button variant="outlined" size="small"
+                                onClick={() => window.location.href = githubAuthUrl().href}>
+                            TO BE OWNER
+                        </Button>
+                }
             </Toolbar>
             <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
                 {sections.map(section => (
@@ -81,7 +88,11 @@ export default function Header(props) {
     );
 }
 
-Header.propTypes = {
+PureHeader.propTypes = {
     sections: PropTypes.array,
     title: PropTypes.string,
 };
+
+export default connect(
+    ({owner}) => ({owner})
+)(PureHeader);
