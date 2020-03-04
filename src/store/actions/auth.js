@@ -30,7 +30,7 @@ function acquireAccessToken(code) {
         'client_secret': process.env.REACT_APP_GITHUB_AUTH_CLIENT_SECRET,
         'code': code,
         'redirect_uri': process.env.REACT_APP_GITHUB_AUTH_REDIRECT_URI
-    }
+    };
 
     return fetch('/login/oauth/access_token', {
         method: 'POST',
