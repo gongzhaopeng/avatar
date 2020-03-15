@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import {connect} from "react-redux";
 import {ownerLogout} from "../../store/actions/auth";
+import {propTypes as storePropTypes} from "../../store/initialState";
 
 const useStyles = makeStyles(theme => ({
     toolbar: {
@@ -92,7 +93,9 @@ export function PureHeader(props) {
 
 PureHeader.propTypes = {
     sections: PropTypes.array,
-    title: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    owner: storePropTypes.owner,
+    onOwnerLogout: PropTypes.func.isRequired
 };
 
 export default connect(

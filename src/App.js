@@ -1,6 +1,9 @@
 import React from 'react';
 import {
     BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
     useLocation
 } from "react-router-dom";
 import {connect} from 'react-redux';
@@ -29,7 +32,16 @@ function AppWithCodeChecking({onCodeReceived}) {
         onCodeReceived(code);
     }
 
-    return <Blog/>;
+    return (
+        <Switch>
+            <Route path="/blog">
+                <Blog/>
+            </Route>
+            <Route path="/">
+                <Redirect to={{pathname: "/blog"}}/>
+            </Route>
+        </Switch>
+    );
 }
 
 export default connect(
