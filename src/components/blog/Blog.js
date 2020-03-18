@@ -4,7 +4,7 @@ import {
     Switch,
     Route,
     useParams,
-    useRouteMatch
+    useRouteMatch, Redirect
 } from "react-router-dom";
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -25,6 +25,9 @@ import post2 from './blog-post.2.md';
 import post3 from './blog-post.3.md';
 
 import {propTypes as storePropTypes} from "../../store/initialState";
+import {titles as headerTitles} from "../../constants/header";
+import {refreshBlogWholly, transferBlogCategory} from "../../store/actions/blog";
+import {Box} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     mainGrid: {
@@ -99,8 +102,8 @@ const sidebar = {
     ],
 };
 
-export function PureBlog({blog, articles}) {
-    const classes = useStyles();
+export function PureBlog(props) {
+    const {onAccessBlogHome} = props;
 
     let {path, url} = useRouteMatch();
 
@@ -108,37 +111,81 @@ export function PureBlog({blog, articles}) {
         <React.Fragment>
             <CssBaseline/>
             <Container maxWidth="lg">
-                <Header title="Blog" sections={sections}/>
-                <main>
-                    <MainFeaturedPost post={mainFeaturedPost}/>
-                    <Grid container spacing={4}>
-                        {featuredPosts.map(post => (
-                            <FeaturedPost key={post.title} post={post}/>
-                        ))}
-                    </Grid>
-                    <Grid container spacing={5} className={classes.mainGrid}>
-                        <Main title="From the firehose" posts={posts}/>
-                        <Sidebar
-                            title={sidebar.title}
-                            description={sidebar.description}
-                            archives={sidebar.archives}
-                            social={sidebar.social}
-                        />
-                    </Grid>
-                </main>
+                <Switch>
+                    <Route exact path={path}>
+                        <BlogHome onAccessBlogHome={onAccessBlogHome}/>
+                    </Route>
+                    <Route exact path={`${path}/:category`}>
+                        <BlogCategory {...props}/>
+                    </Route>
+                    <Route path={path}>
+                        <Redirect to={{pathname: path}}/>
+                    </Route>
+                </Switch>
             </Container>
             <Footer title="Footer" description="Something here to give the footer a purpose!"/>
         </React.Fragment>
     );
 }
 
+function BlogHome({onAccessBlogHome}) {
+    onAccessBlogHome(null);
+}
+
+function BlogCategory({
+                          header, blog, articles,
+                          onAccessBlogHome, onAccessBlogCategory
+                      }) {
+    // const {category} = useParams();
+    //
+    // if (header.title !== headerTitles.blog) {
+    //     onAccessBlogHome(category);
+    // } else if (blog.currentCategory !== category) {
+    //     onAccessBlogCategory(category);
+    // } else {
+    const blogContentProps = {header, blog, articles};
+    return <BlogContent {...blogContentProps}/>;
+    // }
+}
+
+function BlogContent({header, blog, articles}) {
+    const classes = useStyles();
+
+    return (
+        <Box>
+            <Header title="Blog" sections={sections}/>,
+            <main>
+                <MainFeaturedPost post={mainFeaturedPost}/>
+                <Grid container spacing={4}>
+                    {featuredPosts.map(post => (
+                        <FeaturedPost key={post.title} post={post}/>
+                    ))}
+                </Grid>
+                <Grid container spacing={5} className={classes.mainGrid}>
+                    <Main title="From the firehose" posts={posts}/>
+                    <Sidebar
+                        title={sidebar.title}
+                        description={sidebar.description}
+                        archives={sidebar.archives}
+                        social={sidebar.social}
+                    />
+                </Grid>
+            </main>
+        </Box>
+    );
+}
+
 PureBlog.propTypes = {
+    header: storePropTypes.header,
     blog: storePropTypes.blog,
     articles: storePropTypes.articles
 };
 
 export default connect(
-    ({blog, articles}) =>
-        ({blog, articles}),
-    dispatch => ({})
+    ({header, blog, articles}) =>
+        ({header, blog, articles}),
+    dispatch => ({
+        onAccessBlogHome: (targetCategory) => dispatch(refreshBlogWholly(targetCategory)),
+        onAccessBlogCategory: (targetCategory) => dispatch(transferBlogCategory(targetCategory))
+    })
 )(PureBlog);
