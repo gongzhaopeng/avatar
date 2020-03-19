@@ -130,6 +130,7 @@ export function PureBlog(props) {
 
 function BlogHome({onAccessBlogHome}) {
     onAccessBlogHome(null);
+    return null;
 }
 
 function BlogCategory({

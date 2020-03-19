@@ -22,15 +22,15 @@ export const propTypes = {
         categories: PropTypes.arrayOf(
             PropTypes.shape({
                 name: PropTypes.string.isRequired,
-                url: PropTypes.string.isRequired
+                path: PropTypes.string.isRequired
             })
         ).isRequired,
         currentCategory: PropTypes.string
     }).isRequired,
     articles: PropTypes.arrayOf(PropTypes.shape({
-        "name": PropTypes.string.isRequired,
-        "url": PropTypes.string.isRequired,
-        "content": PropTypes.string
+        name: PropTypes.string.isRequired,
+        path: PropTypes.string.isRequired,
+        content: PropTypes.string
     })).isRequired
 };
 
