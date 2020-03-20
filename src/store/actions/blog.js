@@ -1,13 +1,35 @@
+import * as types from '../types';
+import {channelSwitched, tabSwitched} from "./header";
+import {replaced, loadedMore} from "./articles";
+
 const WINDOW_LENGTH_FOR_LOADING_MORE_BLOG_ARTICLES = 20;
 
-export function refreshBlogWholly(targetCategory) {
+export function refreshedWholly(categories, currentCategory) {
+    return {
+        type: types.blog.REFRESHED_WHOLLY,
+        categories,
+        currentCategory
+    };
+}
+
+export function refreshBlogWholly(targetCategoryName, homeUrl) {
     return dispatch => acquireBlogCategories().then(async categories => {
-        const headCategory = categories[0];
-        const articles = await acquireBlogArticlesByCategory(headCategory.path);
+        const targetCategory = (targetCategoryName && categories.find(category =>
+            category.name === targetCategoryName)) || categories[0];
 
-        // TODO
+        const articles = await acquireBlogArticlesByCategory(targetCategory.path);
 
-        await loadMoreBlogArticles(articles);
+        const tabs = categories.map(category => ({
+            name: category.name.toUpperCase,
+            link: `${homeUrl}/${category.name}`
+        }));
+        dispatch(channelSwitched('BLOG', tabs, targetCategory.name.toUpperCase()));
+
+        dispatch(refreshedWholly(categories, targetCategory.name));
+
+        dispatch(replaced(articles));
+
+        await loadMoreBlogArticles(articles)(dispatch);
     });
 }
 
@@ -15,23 +37,25 @@ export function transferBlogCategory(targetCategory) {
 
 }
 
-export async function loadMoreBlogArticles(articles) {
-    const beginIndexToLoad = articles.findIndex(article => !article.content);
-    const loadedArticles = beginIndexToLoad === -1 ? [] :
-        await Promise.all(articles.slice(beginIndexToLoad,
-            WINDOW_LENGTH_FOR_LOADING_MORE_BLOG_ARTICLES).map(articleToLoad =>
-            acquireArticleContent(articleToLoad.path).then(content =>
-                Object.assign({}, articleToLoad, {content})
-            )
-        ));
+export function loadMoreBlogArticles(articles) {
+    return async dispatch => {
+        const beginIndexToLoad = articles.findIndex(article => !article.content);
+        const loadedArticles = beginIndexToLoad === -1 ? [] :
+            await Promise.all(articles.slice(beginIndexToLoad,
+                WINDOW_LENGTH_FOR_LOADING_MORE_BLOG_ARTICLES).map(articleToLoad =>
+                acquireArticleContent(articleToLoad.path).then(content =>
+                    Object.assign({}, articleToLoad, {content})
+                )
+            ));
 
-    console.log(JSON.stringify(loadedArticles));
+        dispatch(loadedMore(beginIndexToLoad, loadedArticles));
+    }
 }
 
 function acquireBlogCategories() {
     return acquireBlogContent("/blog").then(res => {
         return res.map(category => ({
-            name: category.name,
+            name: category.name.toLowerCase(),
             path: category.path
         }));
     });

@@ -113,7 +113,7 @@ export function PureBlog(props) {
             <Container maxWidth="lg">
                 <Switch>
                     <Route exact path={path}>
-                        <BlogHome onAccessBlogHome={onAccessBlogHome}/>
+                        <BlogHome onAccessBlogHome={onAccessBlogHome} homeUrl={url}/>
                     </Route>
                     <Route exact path={`${path}/:category`}>
                         <BlogCategory {...props}/>
@@ -128,8 +128,11 @@ export function PureBlog(props) {
     );
 }
 
-function BlogHome({onAccessBlogHome}) {
-    onAccessBlogHome(null);
+/**
+ * @return {null}
+ */
+function BlogHome({onAccessBlogHome, homeUrl}) {
+    onAccessBlogHome(null, homeUrl);
     return null;
 }
 
@@ -186,7 +189,7 @@ export default connect(
     ({header, blog, articles}) =>
         ({header, blog, articles}),
     dispatch => ({
-        onAccessBlogHome: (targetCategory) => dispatch(refreshBlogWholly(targetCategory)),
+        onAccessBlogHome: (targetCategory, homeUrl) => dispatch(refreshBlogWholly(targetCategory, homeUrl)),
         onAccessBlogCategory: (targetCategory) => dispatch(transferBlogCategory(targetCategory))
     })
 )(PureBlog);
