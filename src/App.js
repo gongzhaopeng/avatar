@@ -1,15 +1,26 @@
 import React from 'react';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Redirect,
-    useLocation
-} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route, Switch, useLocation} from "react-router-dom";
 import {connect} from 'react-redux';
 
 import Blog from "./components/blog/Blog";
 import {codeReceived} from "./store/actions/auth";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
+import Footer from "./components/blog/Footer";
+import Header from "./components/blog/Header";
+
+const sections = [
+    {title: 'Technology', url: '#'},
+    {title: 'Design', url: '#'},
+    {title: 'Culture', url: '#'},
+    {title: 'Business', url: '#'},
+    {title: 'Politics', url: '#'},
+    {title: 'Opinion', url: '#'},
+    {title: 'Science', url: '#'},
+    {title: 'Health', url: '#'},
+    {title: 'Style', url: '#'},
+    {title: 'Travel', url: '#'},
+];
 
 export function PureApp({onCodeReceived}) {
     return (
@@ -33,14 +44,23 @@ function AppWithCodeChecking({onCodeReceived}) {
     }
 
     return (
-        <Switch>
-            <Route path="/blog">
-                <Blog/>
-            </Route>
-            <Route path="/">
-                <Redirect to={{pathname: "/blog"}}/>
-            </Route>
-        </Switch>
+        <React.Fragment>
+            <CssBaseline/>
+            <Container maxWidth="lg">
+                <Header title="Blog" sections={sections}/>,
+                <main>
+                    <Switch>
+                        <Route path="/blog">
+                            <Blog/>
+                        </Route>
+                        <Route path="/">
+                            <Redirect to={{pathname: "/blog"}}/>
+                        </Route>
+                    </Switch>
+                </main>
+            </Container>
+            <Footer title="Footer" description="Something here to give the footer a purpose!"/>
+        </React.Fragment>
     );
 }
 

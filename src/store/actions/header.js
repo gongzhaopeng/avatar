@@ -1,9 +1,9 @@
 import * as types from '../types';
 
-export function channelSwitched(channelTitle, tabs, currentTab) {
+export function channelSwitched(channel, tabs, currentTab) {
     return {
         type: types.header.CHANNEL_SWITCHED,
-        title: channelTitle,
+        channel: channel,
         tabs,
         currentTab
     };

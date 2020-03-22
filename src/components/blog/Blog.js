@@ -1,31 +1,19 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {
-    Switch,
-    Route,
-    useParams,
-    useRouteMatch, Redirect
-} from "react-router-dom";
+import {Redirect, Route, Switch, useParams, useRouteMatch} from "react-router-dom";
 
 import {makeStyles} from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
-import Header from './Header';
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
 import Main from './Main';
 import Sidebar from './Sidebar';
-import Footer from './Footer';
-import post1 from './blog-post.1.md';
-import post2 from './blog-post.2.md';
-import post3 from './blog-post.3.md';
 
 import {propTypes as storePropTypes} from "../../store/initialState";
-import {titles as headerTitles} from "../../constants/header";
+import {channels} from "../../constants/header";
 import {refreshBlogWholly, transferBlogCategory} from "../../store/actions/blog";
 import {Box} from "@material-ui/core";
 
@@ -34,19 +22,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(3),
     },
 }));
-
-const sections = [
-    {title: 'Technology', url: '#'},
-    {title: 'Design', url: '#'},
-    {title: 'Culture', url: '#'},
-    {title: 'Business', url: '#'},
-    {title: 'Politics', url: '#'},
-    {title: 'Opinion', url: '#'},
-    {title: 'Science', url: '#'},
-    {title: 'Health', url: '#'},
-    {title: 'Style', url: '#'},
-    {title: 'Travel', url: '#'},
-];
 
 const mainFeaturedPost = {
     title: 'Title of a longer featured blog post',
@@ -76,8 +51,6 @@ const featuredPosts = [
     },
 ];
 
-const posts = [post1, post2, post3];
-
 const sidebar = {
     title: 'About',
     description:
@@ -103,62 +76,76 @@ const sidebar = {
 };
 
 export function PureBlog(props) {
-    const {onAccessBlogHome} = props;
-
     let {path, url} = useRouteMatch();
 
     return (
-        <React.Fragment>
-            <CssBaseline/>
-            <Container maxWidth="lg">
-                <Switch>
-                    <Route exact path={path}>
-                        <BlogHome onAccessBlogHome={onAccessBlogHome} homeUrl={url}/>
-                    </Route>
-                    <Route exact path={`${path}/:category`}>
-                        <BlogCategory {...props}/>
-                    </Route>
-                    <Route path={path}>
-                        <Redirect to={{pathname: path}}/>
-                    </Route>
-                </Switch>
-            </Container>
-            <Footer title="Footer" description="Something here to give the footer a purpose!"/>
-        </React.Fragment>
+        <Switch>
+            <Route exact path={path}>
+                <BlogHome {...props}
+                          homeUrl={url}
+                          homePath={path}/>
+            </Route>
+            <Route exact path={`${path}/:category`}>
+                <BlogCategory {...props}
+                              homeUrl={url}
+                              homePath={path}/>
+            </Route>
+            <Route path={path}>
+                <Redirect to={{pathname: path}}/>
+            </Route>
+        </Switch>
     );
 }
 
-/**
- * @return {null}
- */
-function BlogHome({onAccessBlogHome, homeUrl}) {
-    onAccessBlogHome(null, homeUrl);
-    return null;
+function BlogHome(props) {
+    const {
+        header, blog,
+        onAccessBlogHome,
+        homeUrl, homePath
+    } = props;
+
+    if (header.channel !== channels.blog) {
+        onAccessBlogHome(null, homeUrl);
+        return <div>Refreshing BLOG channel.</div>;
+    } else if (!blog.currentCategory) {
+        return <div>Refreshing BLOG channel.</div>;
+    } else {
+        return <Redirect to={{pathname: `${homePath}/${blog.currentCategory}`}}/>;
+    }
 }
 
-function BlogCategory({
-                          header, blog, articles,
-                          onAccessBlogHome, onAccessBlogCategory
-                      }) {
-    // const {category} = useParams();
-    //
-    // if (header.title !== headerTitles.blog) {
-    //     onAccessBlogHome(category);
-    // } else if (blog.currentCategory !== category) {
-    //     onAccessBlogCategory(category);
-    // } else {
-    const blogContentProps = {header, blog, articles};
-    return <BlogContent {...blogContentProps}/>;
-    // }
+function BlogCategory(props) {
+    const {
+        header, blog, articles,
+        onAccessBlogHome, onAccessBlogCategory,
+        homeUrl, homePath
+    } = props;
+
+    const {category} = useParams();
+
+    if (header.channel !== channels.blog) {
+        onAccessBlogHome(category, homeUrl);
+        return <div>Refreshing BLOG channel.</div>;
+    } else if (!blog.currentCategory) {
+        return <div>Refreshing BLOG channel.</div>;
+    } else if (blog.currentCategory === category) {
+        return <BlogContent header={header} articles={articles}/>;
+    } else if (blog.categories.some(c => c.name === category)) {
+        onAccessBlogCategory(category);
+        return <div>`Refreshing BLOG category:${category}.`</div>;
+    } else {
+        return <Redirect to={{pathname: `${homePath}/${blog.currentCategory}`}}/>;
+    }
 }
 
-function BlogContent({header, blog, articles}) {
+function BlogContent({header, articles}) {
     const classes = useStyles();
 
-    return (
-        <Box>
-            <Header title="Blog" sections={sections}/>,
-            <main>
+    if (header.channel !== articles.channel || header.currentTab !== articles.tab) {
+        return <div>Refreshing articles.</div>;
+    } else {
+        return (
+            <Box>
                 <MainFeaturedPost post={mainFeaturedPost}/>
                 <Grid container spacing={4}>
                     {featuredPosts.map(post => (
@@ -166,7 +153,7 @@ function BlogContent({header, blog, articles}) {
                     ))}
                 </Grid>
                 <Grid container spacing={5} className={classes.mainGrid}>
-                    <Main title="From the firehose" posts={posts}/>
+                    <Main title="From the firehose" articles={articles}/>
                     <Sidebar
                         title={sidebar.title}
                         description={sidebar.description}
@@ -174,9 +161,9 @@ function BlogContent({header, blog, articles}) {
                         social={sidebar.social}
                     />
                 </Grid>
-            </main>
-        </Box>
-    );
+            </Box>
+        );
+    }
 }
 
 PureBlog.propTypes = {

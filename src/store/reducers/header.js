@@ -3,9 +3,9 @@ import * as types from '../types'
 
 export function header(state = initialState.header, action) {
     if (action.type === types.header.CHANNEL_SWITCHED) {
-        const {title, tabs, currentTab} = action;
+        const {channel, tabs, currentTab} = action;
         return Object.assign({}, state, {
-            title, tabs, currentTab
+            channel, tabs, currentTab
         });
     } else if (action.type === types.header.TAB_SWITCHED) {
         const {targetTab} = action;

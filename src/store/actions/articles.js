@@ -1,8 +1,10 @@
 import * as types from '../types';
 
-export function replaced(newArticles) {
+export function replaced(channel, tab, newArticles) {
     return {
         type: types.articles.REPLACED,
+        channel,
+        tab,
         newArticles
     };
 }

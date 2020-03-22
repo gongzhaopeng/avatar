@@ -9,7 +9,7 @@ export const propTypes = {
         accessToken: PropTypes.string
     }).isRequired,
     header: PropTypes.shape({
-        title: PropTypes.string.isRequired,
+        channel: PropTypes.string.isRequired,
         tabs: PropTypes.arrayOf(
             PropTypes.shape({
                 name: PropTypes.string.isRequired,
@@ -27,11 +27,15 @@ export const propTypes = {
         ).isRequired,
         currentCategory: PropTypes.string
     }).isRequired,
-    articles: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        path: PropTypes.string.isRequired,
-        content: PropTypes.string
-    })).isRequired
+    articles: PropTypes.shape({
+        list: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            path: PropTypes.string.isRequired,
+            content: PropTypes.string
+        })).isRequired,
+        channel: PropTypes.string,
+        tab: PropTypes.string
+    }).isRequired
 };
 
 export default {
@@ -40,7 +44,7 @@ export default {
         accessToken: null
     },
     header: {
-        title: "",
+        channel: "",
         tabs: [],
         currentTab: null
     },
@@ -48,5 +52,9 @@ export default {
         categories: [],
         currentCategory: null
     },
-    articles: []
+    articles: {
+        list: [],
+        channel: null,
+        tab: null
+    }
 };

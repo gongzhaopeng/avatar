@@ -1,3 +1,3 @@
-export const titles = {
+export const channels = {
     blog: "BLOG"
 };

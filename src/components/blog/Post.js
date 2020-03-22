@@ -4,8 +4,6 @@ import {makeStyles} from '@material-ui/core/styles';
 
 import Markdown from "./Markdown";
 
-const PLACEHOLDER_POST = '# LOADING...';
-
 const useStyles = makeStyles(theme => ({
     markdown: {
         ...theme.typography.body2,
@@ -21,37 +19,17 @@ function CustomMarkdown(props) {
 
 export class Post extends Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            content: PLACEHOLDER_POST
-        };
-    }
-
-    componentDidMount() {
-        this.loadPost(this.props.uri)
-    }
-
     render() {
         return (
             <CustomMarkdown>
-                {this.state.content}
+                {this.props.content}
             </CustomMarkdown>
         );
-    }
-
-    loadPost(uri) {
-        fetch(uri)
-            .then(ret => ret.text())
-            .then(text => this.setState({
-                content: text
-            }))
     }
 }
 
 Post.propTypes = {
-    uri: PropTypes.string.isRequired
+    content: PropTypes.string.isRequired
 };
 
 export default Post;

@@ -1,6 +1,7 @@
 import * as types from '../types';
 import {channelSwitched, tabSwitched} from "./header";
 import {replaced, loadedMore} from "./articles";
+import {channels} from "../../constants/header";
 
 const WINDOW_LENGTH_FOR_LOADING_MORE_BLOG_ARTICLES = 20;
 
@@ -13,28 +14,30 @@ export function refreshedWholly(categories, currentCategory) {
 }
 
 export function refreshBlogWholly(targetCategoryName, homeUrl) {
-    return dispatch => acquireBlogCategories().then(async categories => {
-        const targetCategory = (targetCategoryName && categories.find(category =>
-            category.name === targetCategoryName)) || categories[0];
+    return dispatch =>
+        acquireBlogCategories().then(async categories => {
+            const targetCategory = (targetCategoryName && categories.find(category =>
+                category.name === targetCategoryName)) || categories[0];
 
-        const articles = await acquireBlogArticlesByCategory(targetCategory.path);
+            const articles = await acquireBlogArticlesByCategory(targetCategory.path);
 
-        const tabs = categories.map(category => ({
-            name: category.name.toUpperCase,
-            link: `${homeUrl}/${category.name}`
-        }));
-        dispatch(channelSwitched('BLOG', tabs, targetCategory.name.toUpperCase()));
+            const tabs = categories.map(category => ({
+                name: category.name.toUpperCase(),
+                link: `${homeUrl}/${category.name}`
+            }));
+            const currentTab = targetCategory.name.toUpperCase();
+            dispatch(channelSwitched(channels.blog, tabs, currentTab));
 
-        dispatch(refreshedWholly(categories, targetCategory.name));
+            dispatch(refreshedWholly(categories, targetCategory.name));
 
-        dispatch(replaced(articles));
+            dispatch(replaced(channels.blog, currentTab, articles));
 
-        await loadMoreBlogArticles(articles)(dispatch);
-    });
+            await loadMoreBlogArticles(articles)(dispatch);
+        });
 }
 
 export function transferBlogCategory(targetCategory) {
-
+    return dispatch => console.log(`Transferring to category:${targetCategory}.`);
 }
 
 export function loadMoreBlogArticles(articles) {
