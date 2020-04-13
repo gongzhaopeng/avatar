@@ -47,7 +47,7 @@ function AppWithCodeChecking({onCodeReceived}) {
         <React.Fragment>
             <CssBaseline/>
             <Container maxWidth="lg">
-                <Header title="Blog" sections={sections}/>,
+                <Header title="Blog" sections={sections}/>
                 <main>
                     <Switch>
                         <Route path="/blog">
