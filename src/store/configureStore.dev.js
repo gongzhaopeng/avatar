@@ -8,13 +8,14 @@ export default initialState => {
         return store;
     }
 
+    let middlewares = [applyMiddleware(thunk)]
+    if (typeof window.__REDUX_DEVTOOLS_EXTENSION__ === 'function') {
+        middlewares.push(window.__REDUX_DEVTOOLS_EXTENSION__())
+    }
     store = createStore(
         rootReducer,
         initialState,
-        compose(
-            applyMiddleware(thunk),
-            window.__REDUX_DEVTOOLS_EXTENSION__()
-        )
+        compose(...middlewares)
     );
     return store;
 }
